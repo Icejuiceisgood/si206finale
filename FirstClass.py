@@ -58,24 +58,36 @@ class FirstClass:
                     r= requests.get('https://bulbapedia.bulbagarden.net/wiki/' + move + "_(move)")
                     soup= BeautifulSoup(r.content, 'html.parser')
                     tags= soup.find_all(class_='explain')
+                    # typer= soup.find_all(class_='movetypeentry')
                     power= tags[1].text
                     accuracy= tags[2].text
                     diction={}
                     diction["power"]=power
                     diction["accuracy"]= accuracy
+                    # diction["type"]=
                     returnedMNAPDiction[move]= diction
         return returnedMNAPDiction
 
 
-    def insertDataTypes(cur,conn, pokemonTypeDiction):
+    def insertDataTypes(cur,conn, pokemonTypeDiction, pokemonMoveDiction):
         conn = sqlite3.connect('PokeDatabase')
         cur=conn.cursor()
-        for item in pokemonTypeDiction:
-            cur.execute("INSERT OR IGNORE INTO Type (TypeID, TypeName) VALUES (?,?)")
-            
-        # cur.execute("INSERT OR IGNORE INTO Pokemon (name,type_id,HP,attack,defense,speed) VALUES (?,?,?,?,?,?)",(entry["name"]["english"],idOfType,entry["base"]["HP"],
-        
-        # cur.execute("CREATE TABLE IF NOT EXISTS Type (TypeID INTEGER PRIMARY KEY, TypeName STRING)")
-        
-        
+        typeIter=0
+        listing=[]
+        for pokemon in pokemonTypeDiction:
+            if pokemonTypeDiction[pokemon] not in listing:
+                listing.append(pokemonTypeDiction[pokemon])
+        for move in pokemonMoveDiction:
+            if pokemonMoveDiction[move]["type"] not in listing:
+                listing.append(pokemonMoveDiction[move]["type"])
+        for type in listing:
+            cur.execute("INSERT OR IGNORE INTO Type (TypeID, TypeName) VALUES (?,?)",(typeIter,type))
+            typeIter+=1
+        conn.commit()
 
+
+
+r= requests.get('https://bulbapedia.bulbagarden.net/wiki/Scratch_(move)')
+soup= BeautifulSoup(r.content, 'html.parser')
+tags= soup.find('b')
+print(tags.text)
