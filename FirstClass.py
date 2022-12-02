@@ -16,6 +16,7 @@ class FirstClass:
         cur.execute("CREATE TABLE IF NOT EXISTS PokemonToMoves (PokemonID INTEGER, MoveID INTEGER)")
         cur.execute("CREATE TABLE IF NOT EXISTS Moves (MoveID INTEGER PRIMARY KEY, TypeID INTEGER, MoveName STRING, Accuracy STRING, Power INTEGER)")
         cur.execute("CREATE TABLE IF NOT EXISTS Type (TypeID INTEGER PRIMARY KEY, TypeName STRING)")
+        conn.commit()
 
     # chooses the pokemon being focused on, returns a dictionary where the key is pokemon and value are their types
     def getPokemonNameTypes(limit):
@@ -64,4 +65,17 @@ class FirstClass:
                     diction["accuracy"]= accuracy
                     returnedMNAPDiction[move]= diction
         return returnedMNAPDiction
+
+
+    def insertDataTypes(cur,conn, pokemonTypeDiction):
+        conn = sqlite3.connect('PokeDatabase')
+        cur=conn.cursor()
+        for item in pokemonTypeDiction:
+            cur.execute("INSERT OR IGNORE INTO Type (TypeID, TypeName) VALUES (?,?)")
+            
+        # cur.execute("INSERT OR IGNORE INTO Pokemon (name,type_id,HP,attack,defense,speed) VALUES (?,?,?,?,?,?)",(entry["name"]["english"],idOfType,entry["base"]["HP"],
+        
+        # cur.execute("CREATE TABLE IF NOT EXISTS Type (TypeID INTEGER PRIMARY KEY, TypeName STRING)")
+        
+        
 
