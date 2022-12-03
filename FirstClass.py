@@ -5,7 +5,6 @@ import random
 from bs4 import BeautifulSoup
 import requests
 import unicodedata
-import re
 
 class FirstClass:
 
